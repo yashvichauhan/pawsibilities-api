@@ -42,11 +42,19 @@ router.post('/login', async (req,res) => {
         if (!isMatch) {
           return res.status(401).json({ error: 'Invalid credentials.' });
         }
-        const token = jwt.sign({ userId: user.userId}, 'yourSecretKey', { expiresIn: '24h' });
-        res.cookie('token', token, { httpOnly: true }).send({ message: 'Login successful.' });
+        const token = jwt.sign({ userId: user.userId, roleId: user.roleId}, 'yourSecretKey', { expiresIn: '24h' });
+        res.cookie('token', token, { httpOnly: true });
+        res.status(200).send({ email: user.email, roleId: user.roleId, message: 'Login successful.' });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
+})
+
+router.get('/signout', async (req,res) => {
+
+    res.clearCookie("token")
+    return res.status(200).json({message: "signed out"})
+
 })
 
 module.exports = router
