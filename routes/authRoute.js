@@ -50,13 +50,6 @@ router.post('/login', async (req,res) => {
       }
 })
 
-router.get('/signout', async (req,res) => {
-
-  res.clearCookie("token")
-  return res.status(200).json({message: "signed out"})
-
-})
-
 //create API to get all details of user
 router.get('/users', async (req,res) => {
     try {
@@ -74,10 +67,17 @@ router.get('/user/:userId', async (req,res) => {
         if (!user) {
           return res.status(404).json({ error: 'User not found.' });
         }
-        res.status(200).json(user);
+        res.status(200).send({ email: user.email, roleId: user.roleId, message: 'Login successful.' });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
+})
+
+router.get('/signout', async (req,res) => {
+
+    res.clearCookie("token")
+    return res.status(200).json({message: "signed out"})
+
 })
 
 module.exports = router
