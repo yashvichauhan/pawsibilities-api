@@ -2,10 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoute');
-const dotenv = require('dotenv');
+const petRoutes = require('./routes/petRoute');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-
+const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_CONNECTION_STRING = process.env.MONGODB_CONNECTION_STRING;
@@ -14,6 +14,8 @@ const MONGODB_CONNECTION_STRING = process.env.MONGODB_CONNECTION_STRING;
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', authRoutes);
+app.use('/api', petRoutes);
+app.use(cors());
 
 mongoose.connect(MONGODB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected...'))
