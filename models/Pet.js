@@ -10,7 +10,8 @@ const petSchema = new mongoose.Schema({
   color: { type: String },
   description: { type: String },
   available: { type: Boolean, default: true },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // Assuming you have a User model
+  imageUrl: { type: String },
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true } // Assuming you have a User model
 });
 
 const Pet = mongoose.model('Pet', petSchema);
