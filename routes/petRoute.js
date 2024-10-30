@@ -5,6 +5,8 @@ const User = require('../models/User');
 const s3 = require('../config/aws');
 const upload = require('../config/multer');
 const { v4: uuidv4 } = require('uuid');
+require('dotenv').config();
+
 // Keep only one import of mongoose
 const mongoose = require('mongoose'); 
 
@@ -35,10 +37,16 @@ router.post('/pets', upload.single('image'), async (req, res) => {
         ContentType: req.file.mimetype,
       };
 
-      const uploadResult = await s3.upload(s3Params).promise();
-      imageUrl = uploadResult.Location;
+      console.log('s3Params:', s3Params);
+      try {
+        const uploadResult = await s3.upload(s3Params).promise();
+        console.log('Upload successful:', uploadResult);
+        imageUrl = uploadResult.Location;
+      } catch (error) {
+        console.error('S3 upload error:', error);
+        throw error;
+      }
     }
-
 
     // Proceed with pet creation as usual
     const pet = new Pet({
@@ -82,5 +90,53 @@ router.get('/user/:userId/pets', async (req, res) => {
     }
   });
   
+
+// GET /pets - Get all pets
+router.get('/pets', async (req, res) => {
+    try {
+      const pets = await Pet.find({ available: true });
+      res.status(200).json(pets);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+// Update pet details
+router.patch('/pet/:petId', async (req, res) => {
+  try {
+    const petId = req.params.petId;
+    const updateData = req.body;
+
+    // Find the pet by ID and update it with fields from the request body
+    const pet = await Pet.findByIdAndUpdate(petId, updateData, { new: true });
+
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found' });
+    }
+
+    res.status(200).json(pet);
+  } catch (error) {
+    console.error('Error updating pet:', error);
+    res.status(500).json({ error: 'Failed to update pet details' });
+  }
+});
+
+//Delete pet
+router.delete('/pet/:petId', async (req, res) => {
+  try {
+    const petId = req.params.petId;
+    const pet = await Pet.findByIdAndDelete(petId);
+
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found' });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting pet:', error);
+    res.status(500).json({ error: 'Failed to delete pet' });
+  }
+});
+
 
 module.exports = router;

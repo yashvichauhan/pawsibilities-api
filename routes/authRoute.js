@@ -44,7 +44,14 @@ router.post('/login', async (req,res) => {
         }
         const token = jwt.sign({ userId: user.userId, roleId: user.roleId}, 'yourSecretKey', { expiresIn: '24h' });
         res.cookie('token', token, { httpOnly: true });
-        res.status(200).send({ email: user.email, roleId: user.roleId,  userID: user._id, message: 'Login successful.' });
+        console.log({
+          email: user.email,
+          roleId: user.roleId,
+          userID: user._id,
+          username: user.username,
+        });
+        
+        res.status(200).send({ username: user.username, email: user.email, roleId: user.roleId,  userID: user._id, message: 'Login successful.' });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
