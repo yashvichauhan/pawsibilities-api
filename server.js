@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api', authRoutes);
 app.use('/api', petRoutes);
-app.use(cors());
+app.use(cors(origin: '*', // Allows requests from all origins));
 
 mongoose.connect(MONGODB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected...'))
