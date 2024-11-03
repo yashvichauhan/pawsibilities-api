@@ -34,7 +34,8 @@ const jwt = require('jsonwebtoken');
 router.post('/login', async (req,res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        // Find user by email in a case-insensitive way
+        const user = await User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
         if (!user) {
           return res.status(404).json({ error: 'User not found.' });
         }
