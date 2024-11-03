@@ -74,7 +74,40 @@ router.get('/user/:userId', async (req,res) => {
         if (!user) {
           return res.status(404).json({ error: 'User not found.' });
         }
-        res.status(200).send({ email: user.email, roleId: user.roleId, message: 'Login successful.' });
+        res
+          .status(200)
+          .json(user);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+})
+
+//update user by id
+router.put('/user/:userId', async (req,res) => {
+  console.log("***" + req.params.userId);
+    try {
+        const user = await User.findById(req.params.userId);
+        if (!user) {
+          console.log("***1" + req.params.userId);
+          return res.status(404).json({ error: 'User not found.' });
+        }
+
+        console.log("***2" + req.params.userId);
+        const newUser = req.body;
+        
+        if (newUser.newPassword && newUser.newPassword.trim() !== '') {
+          // user.password = await bcrypt.hash(newUser.password, 10);
+          user.password = newUser.newPassword;
+          console.log("***3" + req.params.userId);
+        }
+        user.username = newUser.username;
+        user.email = newUser.email;
+
+        console.log("***4" + req.params.userId);
+        await user.save();
+        console.log("**5*" + req.params.userId);
+        res.status(200).json(user);
+        console.log("**6*" + req.params.userId);
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
