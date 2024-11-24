@@ -138,5 +138,38 @@ router.delete('/pet/:petId', async (req, res) => {
   }
 });
 
+// Get Interested Adopters for Pet
+router.get('/pet/:petId/interested-adopters', async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.petId).populate('interestedAdopters');
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found' });
+    }
+    res.status(200).json(pet.interestedAdopters); // Return the list of interested adopters
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Add Interested Adopter for Pet
+router.patch('/pet/:petId/interest', async (req, res) => {
+  try {
+    const { userId } = req.body; // Expecting userId to be passed in the request body
+    const pet = await Pet.findById(req.params.petId);
+
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found' });
+    }
+
+    if (!pet.interestedAdopters.includes(userId)) {
+      pet.interestedAdopters.push(userId); // Add userId to the list of interested adopters
+      await pet.save();
+    }
+
+    res.status(200).json({ message: 'Interest added successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
