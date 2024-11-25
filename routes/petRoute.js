@@ -164,10 +164,10 @@ router.patch('/pet/:petId/interest', async (req, res) => {
     if (!pet.interestedAdopters.includes(userId)) {
       pet.interestedAdopters.push(userId); // Add userId to the list of interested adopters
       await pet.save();
-      res.status(200).json({ message: 'Interest added successfully' });
+      res.status(200).json({ message: 'You have shown interest in this pet!' });
     }
     else{
-      res.status(200).json({ message: 'You have aready shown interest' });
+      res.status(200).json({ message: 'You have aready shown interest!' });
     }
 
   } catch (error) {
