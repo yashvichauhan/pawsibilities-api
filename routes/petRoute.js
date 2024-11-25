@@ -141,7 +141,7 @@ router.delete('/pet/:petId', async (req, res) => {
 // Get Interested Adopters for Pet
 router.get('/pet/:petId/interested-adopters', async (req, res) => {
   try {
-    const pet = await Pet.findById(req.params.petId).populate('interestedAdopters');
+    const pet = await Pet.findById(req.params.petId).populate('interestedAdopters', 'username email'); // Populate only username and email fields
     if (!pet) {
       return res.status(404).json({ error: 'Pet not found' });
     }
@@ -164,9 +164,12 @@ router.patch('/pet/:petId/interest', async (req, res) => {
     if (!pet.interestedAdopters.includes(userId)) {
       pet.interestedAdopters.push(userId); // Add userId to the list of interested adopters
       await pet.save();
+      res.status(200).json({ message: 'Interest added successfully' });
+    }
+    else{
+      res.status(200).json({ message: 'You have aready shown interest' });
     }
 
-    res.status(200).json({ message: 'Interest added successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
