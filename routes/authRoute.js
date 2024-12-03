@@ -1,8 +1,13 @@
+/**
+ * Sign up and login routes for users.
+ */
+
 const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
+// POST /api/signup - Create a new user
 router.post('/signup', async (req,res) => {
     try {
         const { username, email, password } = req.body;
@@ -19,7 +24,7 @@ router.post('/signup', async (req,res) => {
       }
 })
 
-//Get username from signup API
+// GET /api/signup - Get all users
 router.get('/signup', async (req,res) => {
     try {
         const user = await User.find();
@@ -31,6 +36,7 @@ router.get('/signup', async (req,res) => {
 
 const jwt = require('jsonwebtoken');
 
+// POST /api/login - Login user
 router.post('/login', async (req,res) => {
     try {
         const { email, password } = req.body;
@@ -58,7 +64,7 @@ router.post('/login', async (req,res) => {
       }
 })
 
-//create API to get all details of user
+// GET /api/users - Get all users
 router.get('/users', async (req,res) => {
     try {
         const user = await User.find();
@@ -68,7 +74,7 @@ router.get('/users', async (req,res) => {
       }
 })
 
-//get user by id
+// GET /api/user/:userId - Get user by id
 router.get('/user/:userId', async (req,res) => {
     try {
         const user = await User.findById(req.params.userId);
@@ -83,7 +89,7 @@ router.get('/user/:userId', async (req,res) => {
       }
 })
 
-//update user by id
+// PUT /api/user/:userId - Update user by id
 router.put('/user/:userId', async (req,res) => {
   console.log("***" + req.params.userId);
     try {
@@ -109,11 +115,12 @@ router.put('/user/:userId', async (req,res) => {
         console.log("**5*" + req.params.userId);
         res.status(200).json(user);
         console.log("**6*" + req.params.userId);
-      } catch (error) {
+      } catch (error) {s
         res.status(500).json({ error: error.message });
       }
 })
 
+// DELETE /api/user/:userId - Delete user by id
 router.get('/signout', async (req,res) => {
 
     res.clearCookie("token")

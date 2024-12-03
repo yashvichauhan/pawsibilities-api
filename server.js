@@ -1,3 +1,7 @@
+/**
+ * File: server.js for Pet Adoption API and various backend services
+ */
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -9,7 +13,6 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_CONNECTION_STRING = process.env.MONGODB_CONNECTION_STRING;
-
 
 app.use(express.json());
 app.use(cookieParser());
