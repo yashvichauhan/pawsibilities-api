@@ -1,3 +1,6 @@
+/**
+ * Pet model
+ */
 const mongoose = require('mongoose');
 
 const petSchema = new mongoose.Schema({
@@ -12,7 +15,8 @@ const petSchema = new mongoose.Schema({
   available: { type: Boolean, default: true },
   imageUrl: { type: String },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Assuming you have a User model
-  interestedAdopters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // field to store interested adopters
+  interestedAdopters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // field to store interested adopters
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 const Pet = mongoose.model('Pet', petSchema);

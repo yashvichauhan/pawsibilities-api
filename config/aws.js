@@ -1,4 +1,6 @@
-
+/** 
+ * AWS Configuration for S3 and Rekognition services
+ */
 const AWS = require('aws-sdk');
 
 AWS.config.update({
@@ -8,4 +10,11 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3();
-module.exports = s3;
+
+const rekognition = new AWS.Rekognition({
+  region: 'us-east-1',
+});
+
+module.exports = { s3, rekognition };
+
+// module.exports = s3;

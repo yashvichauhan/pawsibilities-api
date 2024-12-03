@@ -9,7 +9,7 @@
   "author": "Team 6",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1691.0",
+    "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
