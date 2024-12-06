@@ -14,8 +14,12 @@ const petSchema = new mongoose.Schema({
   description: { type: String },
   available: { type: Boolean, default: true },
   imageUrl: { type: String },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Assuming you have a User model
-  interestedAdopters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // field to store interested adopters
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
+  location: {
+    longitude: { type: Number },
+    latitude: { type: Number },
+  },
+  interestedAdopters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], 
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 

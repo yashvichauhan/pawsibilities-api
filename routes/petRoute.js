@@ -59,8 +59,7 @@ router.post('/upload-and-analyze', upload.single('image'), async (req, res) => {
 router.post('/pets', upload.single('image'), async (req, res) => {
   try {
     
-    const { name, species, breed, age, gender, size, color, description, available, owner } = JSON.parse(req.body.data);
-
+    const { name, species, breed, age, gender, size, color, description, available, owner, longitude, latitude } = JSON.parse(req.body.data);
     const ownerId = mongoose.Types.ObjectId.isValid(owner) ? new mongoose.Types.ObjectId(owner) : null;
 
     // Check if owner is provided and convert to ObjectId if it's a valid string
@@ -106,7 +105,11 @@ router.post('/pets', upload.single('image'), async (req, res) => {
       description,
       available,
       imageUrl,
-      owner: ownerId, // Ensure it's treated as ObjectId
+      owner: ownerId, 
+      location: {
+        longitude,
+        latitude,
+      }
     });
 
     await pet.save();
@@ -141,7 +144,15 @@ router.get('/user/:userId/pets', async (req, res) => {
 router.get('/pets', async (req, res) => {
     try {
       const pets = await Pet.find({ available: true });
-      res.status(200).json(pets);
+
+      const modifiedPets = pets.map(pet => {
+        if (!pet.location) {
+          pet.location = null; 
+        }
+        return pet;
+      });
+
+      res.status(200).json(modifiedPets);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
