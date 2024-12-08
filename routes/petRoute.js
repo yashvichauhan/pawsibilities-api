@@ -282,5 +282,29 @@ router.get('/user/:userId/favorites', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch favorite pets' });
   }
 });
+// GET /pet/:petId/contact-owner - Get the contact details of the pet's owner
+router.get('/pet/:petId/contact-owner', async (req, res) => {
+  try {
+    // Find the pet by ID and populate the owner's username and email
+    const pet = await Pet.findById(req.params.petId).populate('owner', 'username email');
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found' });
+    }
+
+    const owner = pet.owner;
+    if (!owner) {
+      return res.status(404).json({ error: 'Owner details not found' });
+    }
+
+    // Return only the owner's contact details
+    res.status(200).json({
+      ownerUsername: owner.username,
+      ownerEmail: owner.email,
+    });
+  } catch (error) {
+    console.error('Error fetching owner details:', error);
+    res.status(500).json({ error: 'Failed to fetch owner details.' });
+  }
+});
 
 module.exports = router;
