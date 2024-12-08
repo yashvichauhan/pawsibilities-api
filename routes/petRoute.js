@@ -283,4 +283,27 @@ router.get('/user/:userId/favorites', async (req, res) => {
   }
 });
 
+// GET /pet/:petId/contact-owner - Get the contact details of the pet's owner
+router.get('/pet/:petId/contact-owner', async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.petId).populate('owner', 'username email');
+    if (!pet) {
+      return res.status(404).json({ error: 'Pet not found' });
+    }
+
+    const owner = pet.owner;
+    if (!owner) {
+      return res.status(404).json({ error: 'Owner not found' });
+    }
+
+    res.status(200).json({
+      ownerUsername: owner.username,
+      ownerEmail: owner.email,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch owner details.' });
+  }
+});
+
 module.exports = router;
+
